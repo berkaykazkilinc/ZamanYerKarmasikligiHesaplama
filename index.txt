@@ -1,0 +1,13 @@
+int toplam(int dizi[],int n)
+{
+	int x = 0;
+	for(int i = 0; i < n; i++)
+	{
+		
+	}
+	while(int j = 0; j < i; j++)
+		{
+		x = x + dizi[i];
+		}
+	return x;
+}

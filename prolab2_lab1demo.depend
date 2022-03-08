@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1646719946 source:c:\users\berkay\desktop\kodlar\prolab2_lab1demo\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<math.h>
+
