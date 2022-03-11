@@ -5,14 +5,28 @@
 #define TEXT_DOSYA "index.txt"
 
 void ZamanKarmasikligi();
-void YerKarmasikligi();
+int YerKarmasikligi(char deneme[]);
 void DosyaKontrol();
 
 int main()
 {
+    char deneme[255];
+    int yer_karmasikligi=0;
+    FILE *dosya;
+    if((dosya=fopen(TEXT_DOSYA,"r"))== NULL)
+    {
+        printf("Dosya Acilamadi");
+        exit(1);
+    }
+    while(!feof(dosya))
+    {
+        fgets(deneme,255,dosya);
+        yer_karmasikligi+=YerKarmasikligi(deneme);
+
+    }
+    printf("YER KARMASIKLIGI: %d\n",yer_karmasikligi);
     //ZamanKarmasikligi();
-    //YerKarmasikligi();
-    DosyaKontrol();
+    //DosyaKontrol();
 
     return 0;
 }
@@ -67,41 +81,55 @@ void ZamanKarmasikligi()
 
     fclose(dosya);
 }
-void YerKarmasikligi()
+int YerKarmasikligi(char deneme[])
 {
-    FILE *dosya;
-    char deneme[255];
+    char *parca;
+    char kopya[255];
     int string_boyutu=0;
     int yer_karmasikligi=0;
-    if((dosya=fopen(TEXT_DOSYA,"r"))== NULL)
+    strcpy(kopya,deneme);
+    parca=strtok(deneme," ");
+
+    if(strcmp(parca,"int")==0 || strcmp(parca,"\tint")==0)
     {
-        printf("Dosya Acilamadi");
-        exit(1);
-    }
-    while(!feof(dosya))
-    {
-        fgets(deneme,255,dosya);
-        if(strstr(deneme,"int")!=NULL)
+        if(strstr(kopya,"main()")!=NULL)
         {
-            /*string_boyutu=strlen(deneme);
-            int i=0;
-            for(i=0;i<string_boyutu;i++)
-            {
-                if(deneme[i]==',');
-                {
-                    //yer_karmasikligi++;
-                }
-                printf("%c",deneme[i]);
-            }*/
-            yer_karmasikligi+=1;
-            // yer_karmasikligi=yer_karmasikligi*4;
-
-
+            return 0;
         }
+        else
+        {
+            int i=0;
+            int uzunluk=0;
+            int virgul_sayisi=0;
+            uzunluk=strlen(kopya);
+            if(strstr(kopya,",")!=NULL)
+            {
+                for(i=0; i<uzunluk; i++)
+                {
+                    if(kopya[i]==',')
+                    {
+                        virgul_sayisi++;
+                    }
+                }
+                printf("virgul sayisi: %d\n",virgul_sayisi);
+                yer_karmasikligi=yer_karmasikligi+(virgul_sayisi+1)*4;
+            }
+            else
+            {
+                yer_karmasikligi++;
+                yer_karmasikligi=yer_karmasikligi*4;
+            }
+        }
+
+
     }
-    yer_karmasikligi=yer_karmasikligi*4;
-    printf("%d",yer_karmasikligi);
+
+
+    return yer_karmasikligi;
+
 }
+
+
 void DosyaKontrol()
 {
     FILE *dosya;
@@ -114,7 +142,6 @@ void DosyaKontrol()
     }
     fgets(deneme,255,dosya);
     kontrol=strlen(deneme);
-    printf("%d",kontrol);
     if(kontrol==0)
     {
         printf("Dosya Icerigi Bos");
