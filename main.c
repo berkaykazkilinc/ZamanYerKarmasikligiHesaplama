@@ -44,51 +44,53 @@ int main()
 }
 void ZamanKarmasikligi()
 {
-    int acilanParantez=0,kapaliParantez=0;
-    int usSayisi=0;
-    int elde=0;
+    int acilanParantez = 0, kapaliParantez = 0;
+    int usSayisi = 0;
+    int elde = 0;
     char deneme[50];
     char deneme2[50];
-    FILE *dosya,*kalinanYer;
+    FILE *dosya, *kalinanYer;
     fpos_t pos;
-    if((dosya=fopen(TEXT_DOSYA,"r"))== NULL)
+    if ((dosya = fopen(TEXT_DOSYA, "r")) == NULL)
     {
         printf("Dosya Acilamadi");
         exit(1);
     }
-    while(!feof(dosya))
+    while (!feof(dosya))
     {
-        fscanf(dosya,"%s",&deneme);
-        if(strstr(deneme,"for")!=NULL)
+        fscanf(dosya, "%s", &deneme);
+        if (strstr(deneme, "for") != NULL || strstr(deneme, "while") != NULL || strstr(deneme, "do") != NULL)
         {
-            kalinanYer=dosya;
+            kalinanYer = dosya;
             while (!feof(kalinanYer))
             {
-                fscanf(kalinanYer,"%s",&deneme2);
-                if(strstr(deneme2,"{")!=NULL)
+                fscanf(kalinanYer, "%s", &deneme2);
+                if (strstr(deneme2, "{") != NULL)
                 {
-                    acilanParantez+=1;
-                }else if (strstr(deneme2,"}")!=NULL)
-                {
-                    kapaliParantez+=1;
+                    acilanParantez += 1;
                 }
-                if(kapaliParantez!=0 && acilanParantez==kapaliParantez)
+                else if (strstr(deneme2, "}") != NULL)
                 {
-                    elde=kapaliParantez;
-                    if(elde>=usSayisi)
-                        {
-                            usSayisi=elde;
-                        }
-                    break;
+                    kapaliParantez += 1;
                 }
-
+                if (kapaliParantez != 0 && acilanParantez == kapaliParantez)
+                {
+                    elde = kapaliParantez;
+                    if (elde >= usSayisi)
+                    {
+                        usSayisi = elde;
+                    }
+                    acilanParantez = 0;
+                    kapaliParantez = 0;
+                    elde = 0;
+                }
             }
         }
     }
 
-    if(usSayisi!=0)
+    if (usSayisi != 0)
     {
-        printf("Big-O(n) = O(n^%d)\n",usSayisi);
+        printf("Big-O(n) = O(n^%d)\n", usSayisi);
     }
     fclose(dosya);
 }
