@@ -8,8 +8,13 @@
 void ZamanKarmasikligi();
 int YerKarmasikligi(char deneme[]);
 void DosyaKontrol();
+void Yazdir();
 
-char yerkarmasikligi_dizi[10];
+char yerkarmasikligi_dizi_int[10];
+char yerkarmasikligi_dizi_float[10];
+char yerkarmasikligi_dizi_char[10];
+char yerkarmasikligi_dizi_double[10];
+char *birlesik;
 
 int main()
 {
@@ -27,17 +32,24 @@ int main()
         yer_karmasikligi+=YerKarmasikligi(deneme);
 
     }
-    printf("YER KARMASIKLIGI: %s + %d\n",yerkarmasikligi_dizi,yer_karmasikligi);
-    //ZamanKarmasikligi();
-    //DosyaKontrol();
+    // printf("YER KARMASIKLIGI: %s + %s + %s + %s + %d\n",yerkarmasikligi_dizi_double,yerkarmasikligi_dizi_char,yerkarmasikligi_dizi_float,yerkarmasikligi_dizi_int,yer_karmasikligi);
+    DosyaKontrol();
+    printf("YER KARMASIKLIGI: ");
+    Yazdir();
+    printf(" %d\n",yer_karmasikligi);
+    ZamanKarmasikligi();
+
 
     return 0;
 }
 void ZamanKarmasikligi()
 {
-    char deneme[255];
-    int n=0;
-    FILE *dosya;
+    int acilanParantez=0,kapaliParantez=0;
+    int usSayisi=0;
+    int elde=0;
+    char deneme[50];
+    char deneme2[50];
+    FILE *dosya,*kalinanYer;
     fpos_t pos;
     if((dosya=fopen(TEXT_DOSYA,"r"))== NULL)
     {
@@ -47,41 +59,37 @@ void ZamanKarmasikligi()
     while(!feof(dosya))
     {
         fscanf(dosya,"%s",&deneme);
-        //printf("%s ",deneme);
-        if(strstr(deneme,"for(")!=NULL)
+        if(strstr(deneme,"for")!=NULL)
         {
-            n+=1;
-            fgetpos(dosya,&pos);
-            printf("Dosyanin aktif konumu: %ld\n", pos);
-        }
-        if(strstr(deneme,"while(")!=NULL)
-        {
-            n+=1;
+            kalinanYer=dosya;
+            while (!feof(kalinanYer))
+            {
+                fscanf(kalinanYer,"%s",&deneme2);
+                if(strstr(deneme2,"{")!=NULL)
+                {
+                    acilanParantez+=1;
+                }else if (strstr(deneme2,"}")!=NULL)
+                {
+                    kapaliParantez+=1;
+                }
+                if(kapaliParantez!=0 && acilanParantez==kapaliParantez)
+                {
+                    elde=kapaliParantez;
+                    if(elde>=usSayisi)
+                        {
+                            usSayisi=elde;
+                        }
+                    break;
+                }
+
+            }
         }
     }
-    /*if(strcmp(deneme,"for")==0)
+
+    if(usSayisi!=0)
     {
-        n+=2;
-    }*/
-    if(n!=0)
-    {
-        printf("Big-O(n) = O(n^%d)\n",n);
+        printf("Big-O(n) = O(n^%d)\n",usSayisi);
     }
-    printf("%s\n",deneme);
-    int x=0,j=0,z=0;
-    x=strlen(deneme);
-    for(j=0; j<x-1; j++)
-    {
-        if(deneme[j]==',')
-        {
-            z++;
-        }
-        printf("|||||%d",z);
-        printf("%c\n",deneme[0]);
-
-    }
-
-
     fclose(dosya);
 }
 int YerKarmasikligi(char deneme[])
@@ -93,7 +101,7 @@ int YerKarmasikligi(char deneme[])
     strcpy(kopya,deneme);
     parca=strtok(deneme," ");
 
-    if(strcmp(parca,"int")==0 || strcmp(parca,"\tint")==0)
+    if(strcmp(parca,"int")==0 || strcmp(parca,"\tint")==0)      // INT KONTROL
     {
         if(strstr(kopya,"main()")!=NULL)
         {
@@ -122,12 +130,12 @@ int YerKarmasikligi(char deneme[])
                 }
                 if(sol==2 && sag==2)
                 {
-                    strcpy(yerkarmasikligi_dizi,"4n^2");
+                    strcpy(yerkarmasikligi_dizi_int,"4n^2");
                     return 0;
                 }
                 else
                 {
-                    strcpy(yerkarmasikligi_dizi,"4n");
+                    strcpy(yerkarmasikligi_dizi_int,"4n");
                     return 0;
                 }
 
@@ -141,7 +149,7 @@ int YerKarmasikligi(char deneme[])
                         virgul_sayisi++;
                     }
                 }
-                printf("virgul sayisi: %d\n",virgul_sayisi);
+                //printf("virgul sayisi: %d\n",virgul_sayisi);
                 yer_karmasikligi=yer_karmasikligi+(virgul_sayisi+1)*4;
             }
             else
@@ -153,12 +161,174 @@ int YerKarmasikligi(char deneme[])
 
 
     }
+    if(strcmp(parca,"float")==0 || strcmp(parca,"\tfloat")==0)      // FLOAT KONTROL
+    {
+
+        int i=0;
+        int sol=0,sag=0;
+        int uzunluk=0;
+        int virgul_sayisi=0;
+        uzunluk=strlen(kopya);
+        if(strstr(kopya,"[")!=NULL && strstr(kopya,"]")!=NULL)
+        {
+            for(i=0; i<uzunluk; i++)
+            {
+                if(kopya[i]=='[')
+                {
+                    sol++;
+                }
+                else if(kopya[i]==']')
+                {
+                    sag++;
+                }
+
+            }
+            if(sol==2 && sag==2)
+            {
+                strcpy(yerkarmasikligi_dizi_float,"4n^2");
+                return 0;
+            }
+            else
+            {
+                strcpy(yerkarmasikligi_dizi_float,"4n");
+                return 0;
+            }
+
+        }
+        else if(strstr(kopya,",")!=NULL)
+        {
+            for(i=0; i<uzunluk; i++)
+            {
+                if(kopya[i]==',')
+                {
+                    virgul_sayisi++;
+                }
+            }
+           // printf("virgul sayisi: %d\n",virgul_sayisi);
+            yer_karmasikligi=yer_karmasikligi+(virgul_sayisi+1)*4;
+        }
+        else
+        {
+            yer_karmasikligi++;
+            yer_karmasikligi=yer_karmasikligi*4;
+        }
 
 
+
+    }
+    if(strcmp(parca,"char")==0 || strcmp(parca,"\tchar")==0)        // CHAR KONTROL
+    {
+
+        int i=0;
+        int sol=0,sag=0;
+        int uzunluk=0;
+        int virgul_sayisi=0;
+        uzunluk=strlen(kopya);
+        if(strstr(kopya,"[")!=NULL && strstr(kopya,"]")!=NULL)
+        {
+            for(i=0; i<uzunluk; i++)
+            {
+                if(kopya[i]=='[')
+                {
+                    sol++;
+                }
+                else if(kopya[i]==']')
+                {
+                    sag++;
+                }
+
+            }
+            if(sol==2 && sag==2)
+            {
+                strcpy(yerkarmasikligi_dizi_char,"n^2");
+                return 0;
+            }
+            else
+            {
+                strcpy(yerkarmasikligi_dizi_char,"n");
+                return 0;
+            }
+
+        }
+        else if(strstr(kopya,",")!=NULL)
+        {
+            for(i=0; i<uzunluk; i++)
+            {
+                if(kopya[i]==',')
+                {
+                    virgul_sayisi++;
+                }
+            }
+           // printf("virgul sayisi: %d\n",virgul_sayisi);
+            yer_karmasikligi=yer_karmasikligi+(virgul_sayisi+1)*1;
+        }
+        else
+        {
+            yer_karmasikligi++;
+            yer_karmasikligi=yer_karmasikligi*1;
+        }
+
+
+
+    }
+    if(strcmp(parca,"double")==0 || strcmp(parca,"\tdouble")==0)      // DOUBLE KONTROL
+    {
+
+        int i=0;
+        int sol=0,sag=0;
+        int uzunluk=0;
+        int virgul_sayisi=0;
+        uzunluk=strlen(kopya);
+        if(strstr(kopya,"[")!=NULL && strstr(kopya,"]")!=NULL)
+        {
+            for(i=0; i<uzunluk; i++)
+            {
+                if(kopya[i]=='[')
+                {
+                    sol++;
+                }
+                else if(kopya[i]==']')
+                {
+                    sag++;
+                }
+
+            }
+            if(sol==2 && sag==2)
+            {
+                strcpy(yerkarmasikligi_dizi_double,"8n^2");
+                return 0;
+            }
+            else
+            {
+                strcpy(yerkarmasikligi_dizi_double,"8n");
+                return 0;
+            }
+
+        }
+        else if(strstr(kopya,",")!=NULL)
+        {
+            for(i=0; i<uzunluk; i++)
+            {
+                if(kopya[i]==',')
+                {
+                    virgul_sayisi++;
+                }
+            }
+         //   printf("virgul sayisi: %d\n",virgul_sayisi);
+            yer_karmasikligi=yer_karmasikligi+(virgul_sayisi+1)*8;
+        }
+        else
+        {
+            yer_karmasikligi++;
+            yer_karmasikligi=yer_karmasikligi*8;
+        }
+
+
+
+    }
     return yer_karmasikligi;
 
 }
-
 
 void DosyaKontrol()
 {
@@ -167,18 +337,49 @@ void DosyaKontrol()
     int kontrol=0;
     if((dosya=fopen(TEXT_DOSYA,"r"))== NULL)
     {
-        printf("Dosya Acilamadi");
+        printf("Dosya Acilamadi\n");
         exit(1);
     }
     fgets(deneme,255,dosya);
     kontrol=strlen(deneme);
     if(kontrol==0)
     {
-        printf("Dosya Icerigi Bos");
+        printf("Dosya Icerigi Bos\n");
     }
     else
     {
-        printf("Dosya Icerigi Mevcut");
+        printf("Dosya Icerigi Mevcut\n");
+    }
+
+}
+void Yazdir()
+{
+    int uzunluk_int=0;
+    int uzunluk_float=0;
+    int uzunluk_char=0;
+    int uzunluk_double=0;
+    uzunluk_int=strlen(yerkarmasikligi_dizi_int);
+    uzunluk_float=strlen(yerkarmasikligi_dizi_float);
+    uzunluk_char=strlen(yerkarmasikligi_dizi_char);
+    uzunluk_double=strlen(yerkarmasikligi_dizi_double);
+    if(uzunluk_int>0)
+    {
+        printf("%s +",yerkarmasikligi_dizi_int);
+    }
+
+    if(uzunluk_float>0)
+    {
+        printf(" %s +",yerkarmasikligi_dizi_float);
+    }
+
+    if(uzunluk_char>0)
+    {
+        printf(" %s +",yerkarmasikligi_dizi_char);
+    }
+
+    if(uzunluk_double>0)
+    {
+        printf(" %s +",yerkarmasikligi_dizi_double);
     }
 
 }
