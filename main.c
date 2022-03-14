@@ -2,13 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
+#include <conio.h>
 #define TEXT_DOSYA "index.txt"
+
 
 
 void ZamanKarmasikligi();
 int YerKarmasikligi(char deneme[]);
 void DosyaKontrol();
 void Yazdir();
+void zamanHesapla();
 
 char yerkarmasikligi_dizi_int[10];
 char yerkarmasikligi_dizi_float[10];
@@ -38,7 +42,7 @@ int main()
     Yazdir();
     printf(" %d\n",yer_karmasikligi);
     ZamanKarmasikligi();
-
+    //zamanHesapla();
 
     return 0;
 }
@@ -384,4 +388,15 @@ void Yazdir()
         printf(" %s +",yerkarmasikligi_dizi_double);
     }
 
+}
+
+void zamanHesapla()
+{
+    clock_t baslangic = clock();
+
+    /* buraya kod yaziniz */
+
+    clock_t son = clock();
+    double harcananZaman = (double)(son - baslangic) / CLOCKS_PER_SEC;
+    printf("\n\n%f\n", harcananZaman);
 }
