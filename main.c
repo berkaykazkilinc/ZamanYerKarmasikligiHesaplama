@@ -4,9 +4,12 @@
 #include <math.h>
 #define TEXT_DOSYA "index.txt"
 
+
 void ZamanKarmasikligi();
 int YerKarmasikligi(char deneme[]);
 void DosyaKontrol();
+
+char yerkarmasikligi_dizi[10];
 
 int main()
 {
@@ -24,7 +27,7 @@ int main()
         yer_karmasikligi+=YerKarmasikligi(deneme);
 
     }
-    printf("YER KARMASIKLIGI: %d\n",yer_karmasikligi);
+    printf("YER KARMASIKLIGI: %s + %d\n",yerkarmasikligi_dizi,yer_karmasikligi);
     //ZamanKarmasikligi();
     //DosyaKontrol();
 
@@ -99,10 +102,37 @@ int YerKarmasikligi(char deneme[])
         else
         {
             int i=0;
+            int sol=0,sag=0;
             int uzunluk=0;
             int virgul_sayisi=0;
             uzunluk=strlen(kopya);
-            if(strstr(kopya,",")!=NULL)
+            if(strstr(kopya,"[")!=NULL && strstr(kopya,"]")!=NULL)
+            {
+                for(i=0; i<uzunluk; i++)
+                {
+                    if(kopya[i]=='[')
+                    {
+                        sol++;
+                    }
+                    else if(kopya[i]==']')
+                    {
+                        sag++;
+                    }
+
+                }
+                if(sol==2 && sag==2)
+                {
+                    strcpy(yerkarmasikligi_dizi,"4n^2");
+                    return 0;
+                }
+                else
+                {
+                    strcpy(yerkarmasikligi_dizi,"4n");
+                    return 0;
+                }
+
+            }
+            else if(strstr(kopya,",")!=NULL)
             {
                 for(i=0; i<uzunluk; i++)
                 {
