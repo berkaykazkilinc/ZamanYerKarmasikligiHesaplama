@@ -1,19 +1,20 @@
-#include <stdio.h>
-int main(){
-	int i,j;
-	int sum = 0;
-	int n=10;
-char ooççhikmet[n];
-	int arr[n][n];
-	for (i=0;i<10;i++){
-		for (j=0;j<10;j++){
-		    arr[i][j]=i*j;
-			sum = sum + arr[i][j];
-		}
-	}
-        printf("%d", sum);	
-        return 0;
-        
+void printAllNumbersThenAllPairSums(int arr[], int size)
+{
+    char x[n];
+	float a,f[n];
+	double b,d[n];
+	char c;
+	int matris[n][n];
+	
+    for (int i = 0; i < size; i++)
+    {
+        printf("%d\n", arr[i]);
+    }
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            printf("%d\n", arr[i] + arr[j]);
+        }
+    }
 }
- //zaman karmaşıklığı=O(n2)
- //yer karmaşıklığı=(4n2+16 O(n2))
