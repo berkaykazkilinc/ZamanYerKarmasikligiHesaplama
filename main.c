@@ -12,7 +12,7 @@ void ZamanKarmasikligi();
 int YerKarmasikligi(char deneme[],FILE *kalinan_yer);
 void DosyaKontrol();
 void Yazdir();
-void zamanHesapla();
+void harcananZaman();
 
 char yerkarmasikligi_dizi_int[10];
 char yerkarmasikligi_dizi_float[10];
@@ -41,7 +41,7 @@ int main()
     Yazdir();
     printf(" %d\n",yer_karmasikligi);
     ZamanKarmasikligi();
-    //zamanHesapla();
+    harcananZaman();
 
     return 0;
 }
@@ -106,7 +106,7 @@ int YerKarmasikligi(char deneme[],FILE *kalinan_yer)
     if(strcmp(deneme,"int")==0 || strstr(deneme,"(int")!=NULL)  //int kontrol
     {
         char deneme2[255];
-        while(deneme[uzunluk]!='\n') //satýr sonuna kadar oku
+        while(deneme[uzunluk]!='\n') //satÃ½r sonuna kadar oku
         {
             fscanf(kalinan_yer,"%s",&deneme2);
             if(strstr(deneme2,"main()"))
@@ -169,7 +169,7 @@ int YerKarmasikligi(char deneme[],FILE *kalinan_yer)
     if(strcmp(deneme,"float")==0 || strstr(deneme,"(float")!=NULL)  //float kontrol
     {
         char deneme2[255];
-        while(deneme[uzunluk]!='\n') //satýr sonuna kadar oku
+        while(deneme[uzunluk]!='\n') //satÃ½r sonuna kadar oku
         {
             fscanf(kalinan_yer,"%s",&deneme2);
             if(strstr(deneme2,"main()"))
@@ -232,7 +232,7 @@ int YerKarmasikligi(char deneme[],FILE *kalinan_yer)
     if(strcmp(deneme,"char")==0 || strstr(deneme,"(char")!=NULL)  //char kontrol
     {
         char deneme2[255];
-        while(deneme[uzunluk]!='\n') //satýr sonuna kadar oku
+        while(deneme[uzunluk]!='\n') //satÃ½r sonuna kadar oku
         {
             fscanf(kalinan_yer,"%s",&deneme2);
             if(strstr(deneme2,"main()"))
@@ -296,7 +296,7 @@ int YerKarmasikligi(char deneme[],FILE *kalinan_yer)
     if(strcmp(deneme,"double")==0 || strstr(deneme,"(double")!=NULL)  //double kontrol
     {
         char deneme2[255];
-        while(deneme[uzunluk]!='\n') //satýr sonuna kadar oku
+        while(deneme[uzunluk]!='\n') //satÃ½r sonuna kadar oku
         {
             fscanf(kalinan_yer,"%s",&deneme2);
             if(strstr(deneme2,"main()"))
@@ -413,13 +413,53 @@ void Yazdir()
 
 }
 
-void zamanHesapla()
+void harcananZaman()
 {
-    clock_t baslangic = clock();
-
-    /* buraya kod yaziniz */
-
-    clock_t son = clock();
-    double harcananZaman = (double)(son - baslangic) / CLOCKS_PER_SEC;
-    printf("\n\n%f\n", harcananZaman);
+    int nSayisi = 0, sabitSayi = 0, eldeSayi = 0;
+    int acilanParantez = 0, kapananParantez = 0;
+    char deneme[50];
+    char deneme2[50];
+    char deneme3[50];
+    FILE *dosya, *kalinanYer;
+    dosya = fopen(TEXT_DOSYA, "r");
+    while (!feof(dosya))
+    {
+        fscanf(dosya, "%s", &deneme);
+        if (strstr(deneme, "for") != NULL || strstr(deneme, "while") != NULL || strstr(deneme, "do") != NULL)
+        {
+            kalinanYer = dosya;
+            while (!feof(kalinanYer))
+            {
+                fscanf(kalinanYer, "%s", &deneme2);
+                if (strstr(deneme2, "{") != NULL)
+                {
+                    acilanParantez += 1;
+                }
+                else if (strstr(deneme2, "}") != NULL)
+                {
+                    kapananParantez += 1;
+                }
+                if (acilanParantez == 0 || acilanParantez != kapananParantez)
+                {
+                    if (strstr(deneme2, "return") != NULL || strstr(deneme2, "=") != NULL)
+                    {
+                        nSayisi++;
+                    }
+                }
+            }
+        }
+    }
+    fclose(dosya);
+    FILE *dosya2;
+    dosya2 = fopen(TEXT_DOSYA, "r");
+    while (!feof(dosya2))
+    {
+        fscanf(dosya2, "%s", &deneme3);
+        if (strstr(deneme3, "return") != NULL || strstr(deneme3, "=") != NULL)
+        {
+            eldeSayi++;
+        }
+    }
+    fclose(dosya2);
+    printf("\nGecen Zaman: T(N) = %dN + %d", nSayisi, (eldeSayi - nSayisi));
 }
