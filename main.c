@@ -461,5 +461,5 @@ void harcananZaman()
         }
     }
     fclose(dosya2);
-    printf("\nGecen Zaman: T(N) = %dN + %d", nSayisi, (eldeSayi - nSayisi));
+    printf("Gecen Zaman: T(N) = %dN + %d\n", nSayisi, (eldeSayi - nSayisi));
 }
