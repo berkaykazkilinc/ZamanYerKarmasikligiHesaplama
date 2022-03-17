@@ -10,14 +10,12 @@
 
 void ZamanKarmasikligi();
 int YerKarmasikligi(char deneme[],FILE *kalinan_yer);
+int YerKarmasikligiKontrol(int uzunluk,int byte,FILE *kalinan_yer,char dizi[]);
 void DosyaKontrol();
-void Yazdir();
-void zamanHesapla();
+void harcananZaman();
 
-char yerkarmasikligi_dizi_int[10];
-char yerkarmasikligi_dizi_float[10];
-char yerkarmasikligi_dizi_char[10];
-char yerkarmasikligi_dizi_double[10];
+char sonuc_string[255];
+char ilk_tutulan[255];
 
 int main()
 {
@@ -35,13 +33,10 @@ int main()
         yer_karmasikligi+=YerKarmasikligi(deneme,dosya);
 
     }
-    // printf("YER KARMASIKLIGI: %s + %s + %s + %s + %d\n",yerkarmasikligi_dizi_double,yerkarmasikligi_dizi_char,yerkarmasikligi_dizi_float,yerkarmasikligi_dizi_int,yer_karmasikligi);
     DosyaKontrol();
-    printf("YER KARMASIKLIGI: ");
-    Yazdir();
-    printf(" %d\n",yer_karmasikligi);
+    printf("YER KARMASIKLIGI: %s %d\n",sonuc_string,yer_karmasikligi);
     ZamanKarmasikligi();
-    //zamanHesapla();
+    harcananZaman();
 
     return 0;
 }
@@ -95,101 +90,86 @@ void ZamanKarmasikligi()
     {
         printf("Big-O(n) = O(n^%d)\n", usSayisi);
     }
+    else if (usSayisi == 0)
+    {
+        printf("Big-O(n) = O(1)\n");
+    }
     fclose(dosya);
 }
 int YerKarmasikligi(char deneme[],FILE *kalinan_yer)
 {
-    int uzunluk=0,i=0;
-    int virgul_sayisi=0;
+    int uzunluk=0,i=0,byte=0;
     int yer_karmasikligi=0;
     uzunluk=strlen(deneme);
     if(strcmp(deneme,"int")==0 || strstr(deneme,"(int")!=NULL)  //int kontrol
     {
-        char deneme2[255];
-        while(deneme[uzunluk]!='\n') //satýr sonuna kadar oku
-        {
-            fscanf(kalinan_yer,"%s",&deneme2);
-            if(strstr(deneme2,"main()"))
-            {
-                return 0;
-            }
-            else
-            {
-                int uzunluk_deneme2=0,sol=0,sag=0;
-                uzunluk_deneme2=strlen(deneme2);
-                if(strstr(deneme2,"[")!=NULL && strstr(deneme2,"]")!=NULL)
-                {
-
-                    for(i=0; i<uzunluk_deneme2; i++)
-                    {
-                        if(deneme2[i]=='[')
-                        {
-                            sol++;
-                        }
-                        else if(deneme2[i]==']')
-                        {
-                            sag++;
-                        }
-
-                    }
-                    if(sol==2 && sag==2)
-                    {
-                        strcpy(yerkarmasikligi_dizi_int,"4n^2");
-
-                    }
-                    else
-                    {
-                        strcpy(yerkarmasikligi_dizi_int,"4n");
-
-                    }
-
-                }
-                else if(strstr(deneme2,",")!=NULL)
-                {
-                    for(i=0; i<uzunluk_deneme2; i++)
-                    {
-                        if(deneme2[i]==',')
-                        {
-                            virgul_sayisi++;
-                        }
-                    }
-                    //printf("virgul sayisi: %d\n",virgul_sayisi);
-                    yer_karmasikligi=yer_karmasikligi+(virgul_sayisi+1)*4;
-                }
-                else
-                {
-                    yer_karmasikligi++;
-                    yer_karmasikligi=yer_karmasikligi*4;
-                }
-
-            }
-            return yer_karmasikligi;
-        }
+       byte=4;
     }
-    if(strcmp(deneme,"float")==0 || strstr(deneme,"(float")!=NULL)  //float kontrol
+
+    else if(strcmp(deneme,"float")==0 || strstr(deneme,"(float")!=NULL)  //float kontrol
     {
-        char deneme2[255];
-        while(deneme[uzunluk]!='\n') //satýr sonuna kadar oku
+       byte=4;
+
+    }
+    else if(strcmp(deneme,"char")==0 || strstr(deneme,"(char")!=NULL)  //char kontrol
+    {
+        byte=1;
+
+    }
+
+    else if(strcmp(deneme,"double")==0 || strstr(deneme,"(double")!=NULL)  //double kontrol
+    {
+        byte=8;
+
+    }
+    else if(strcmp(deneme,"boolen")==0 || strstr(deneme,"(boolen")!=NULL)  //double kontrol
+    {
+        byte=1;
+
+    }
+    else if(strcmp(deneme,"short")==0 || strstr(deneme,"(short")!=NULL)  //double kontrol
+    {
+        byte=2;
+
+    }
+    else if(strcmp(deneme,"long")==0 || strstr(deneme,"(long")!=NULL)  //double kontrol
+    {
+        byte=4;
+    }
+    else
+    {
+        return 0;
+    }
+        yer_karmasikligi=YerKarmasikligiKontrol(uzunluk,byte,kalinan_yer,deneme);
+        return yer_karmasikligi;
+
+}
+
+int YerKarmasikligiKontrol(int uzunluk,int byte,FILE *kalinan_yer,char dizi[])
+{
+        char dizi2[255];
+        int i=0,virgul_sayisi=0,yer_karmasikligi=0;
+        while(dizi[uzunluk]!='\n') //satýr sonuna kadar oku
         {
-            fscanf(kalinan_yer,"%s",&deneme2);
-            if(strstr(deneme2,"main()"))
+            fscanf(kalinan_yer,"%s",&dizi2);
+            if(strstr(dizi2,"main()"))
             {
                 return 0;
             }
             else
             {
-                int uzunluk_deneme2=0,sol=0,sag=0;
-                uzunluk_deneme2=strlen(deneme2);
-                if(strstr(deneme2,"[")!=NULL && strstr(deneme2,"]")!=NULL)
+                int uzunluk_dizi2=0,sol=0,sag=0;
+                uzunluk_dizi2=strlen(dizi2);
+                if(strstr(dizi2,"[")!=NULL && strstr(dizi2,"]")!=NULL)
                 {
 
-                    for(i=0; i<uzunluk_deneme2; i++)
+                    for(i=0; i<uzunluk_dizi2; i++)
                     {
-                        if(deneme2[i]=='[')
+                        if(dizi2[i]=='[')
                         {
                             sol++;
                         }
-                        else if(deneme2[i]==']')
+                        else if(dizi2[i]==']')
                         {
                             sag++;
                         }
@@ -197,166 +177,38 @@ int YerKarmasikligi(char deneme[],FILE *kalinan_yer)
                     }
                     if(sol==2 && sag==2)
                     {
-                        strcpy(yerkarmasikligi_dizi_float,"4n^2");
-
+                        sprintf(ilk_tutulan," %dn^2 +",byte);
+                        strcat(sonuc_string,ilk_tutulan);
                     }
                     else
                     {
-                        strcpy(yerkarmasikligi_dizi_float,"4n");
+                        sprintf(ilk_tutulan," %d^n +",byte);
+                        strcat(sonuc_string,ilk_tutulan);
 
                     }
 
                 }
-                else if(strstr(deneme2,",")!=NULL)
+                else if(strstr(dizi2,",")!=NULL)
                 {
-                    for(i=0; i<uzunluk_deneme2; i++)
+                    for(i=0; i<uzunluk_dizi2; i++)
                     {
-                        if(deneme2[i]==',')
+                        if(dizi2[i]==',')
                         {
                             virgul_sayisi++;
                         }
                     }
                     // printf("virgul sayisi: %d\n",virgul_sayisi);
-                    yer_karmasikligi=yer_karmasikligi+(virgul_sayisi+1)*4;
+                    yer_karmasikligi=yer_karmasikligi+(virgul_sayisi+1)*byte;
                 }
                 else
                 {
                     yer_karmasikligi++;
-                    yer_karmasikligi=yer_karmasikligi*4;
+                    yer_karmasikligi=yer_karmasikligi*byte;
                 }
 
             }
             return yer_karmasikligi;
         }
-    }
-    if(strcmp(deneme,"char")==0 || strstr(deneme,"(char")!=NULL)  //char kontrol
-    {
-        char deneme2[255];
-        while(deneme[uzunluk]!='\n') //satýr sonuna kadar oku
-        {
-            fscanf(kalinan_yer,"%s",&deneme2);
-            if(strstr(deneme2,"main()"))
-            {
-                return 0;
-            }
-            else
-            {
-                int uzunluk_deneme2=0,sol=0,sag=0;
-                uzunluk_deneme2=strlen(deneme2);
-                if(strstr(deneme2,"[")!=NULL && strstr(deneme2,"]")!=NULL)
-                {
-
-                    for(i=0; i<uzunluk_deneme2; i++)
-                    {
-                        if(deneme2[i]=='[')
-                        {
-                            sol++;
-                        }
-                        else if(deneme2[i]==']')
-                        {
-                            sag++;
-                        }
-
-                    }
-                    if(sol==2 && sag==2)
-                    {
-                        strcpy(yerkarmasikligi_dizi_char,"n^2");
-
-                    }
-                    else
-                    {
-                        strcpy(yerkarmasikligi_dizi_char,"n");
-
-                    }
-
-                }
-                else if(strstr(deneme2,",")!=NULL)
-                {
-                    for(i=0; i<uzunluk_deneme2; i++)
-                    {
-                        if(deneme2[i]==',')
-                        {
-                            virgul_sayisi++;
-                        }
-                    }
-                    //printf("virgul sayisi: %d\n",virgul_sayisi);
-                    yer_karmasikligi=yer_karmasikligi+(virgul_sayisi+1)*1;
-                }
-                else
-                {
-                    yer_karmasikligi++;
-                    yer_karmasikligi=yer_karmasikligi*1;
-                }
-
-            }
-            return yer_karmasikligi;
-        }
-    }
-
-    if(strcmp(deneme,"double")==0 || strstr(deneme,"(double")!=NULL)  //double kontrol
-    {
-        char deneme2[255];
-        while(deneme[uzunluk]!='\n') //satýr sonuna kadar oku
-        {
-            fscanf(kalinan_yer,"%s",&deneme2);
-            if(strstr(deneme2,"main()"))
-            {
-                return 0;
-            }
-            else
-            {
-                int uzunluk_deneme2=0,sol=0,sag=0;
-                uzunluk_deneme2=strlen(deneme2);
-                if(strstr(deneme2,"[")!=NULL && strstr(deneme2,"]")!=NULL)
-                {
-
-                    for(i=0; i<uzunluk_deneme2; i++)
-                    {
-                        if(deneme2[i]=='[')
-                        {
-                            sol++;
-                        }
-                        else if(deneme2[i]==']')
-                        {
-                            sag++;
-                        }
-
-                    }
-                    if(sol==2 && sag==2)
-                    {
-                        strcpy(yerkarmasikligi_dizi_double,"8n^2");
-
-                    }
-                    else
-                    {
-                        strcpy(yerkarmasikligi_dizi_double,"8n");
-
-                    }
-
-                }
-                else if(strstr(deneme2,",")!=NULL)
-                {
-                    for(i=0; i<uzunluk_deneme2; i++)
-                    {
-                        if(deneme2[i]==',')
-                        {
-                            virgul_sayisi++;
-                        }
-                    }
-                    //  printf("virgul sayisi: %d\n",virgul_sayisi);
-                    yer_karmasikligi=yer_karmasikligi+(virgul_sayisi+1)*8;
-                }
-                else
-                {
-                    yer_karmasikligi++;
-                    yer_karmasikligi=yer_karmasikligi*8;
-                }
-
-            }
-            return yer_karmasikligi;
-        }
-    }
-
 }
 
 void DosyaKontrol()
@@ -381,45 +233,62 @@ void DosyaKontrol()
     }
 
 }
-void Yazdir()
+
+void harcananZaman()
 {
-    int uzunluk_int=0;
-    int uzunluk_float=0;
-    int uzunluk_char=0;
-    int uzunluk_double=0;
-    uzunluk_int=strlen(yerkarmasikligi_dizi_int);
-    uzunluk_float=strlen(yerkarmasikligi_dizi_float);
-    uzunluk_char=strlen(yerkarmasikligi_dizi_char);
-    uzunluk_double=strlen(yerkarmasikligi_dizi_double);
-    if(uzunluk_int>0)
+    int nSayisi = 0, sabitSayi = 0, eldeSayi = 0;
+    int acilanParantez = 0, kapananParantez = 0;
+    char deneme[50];
+    char deneme2[50];
+    char deneme3[50];
+    FILE *dosya, *kalinanYer;
+    dosya = fopen(TEXT_DOSYA, "r");
+    while (!feof(dosya))
     {
-        printf("%s +",yerkarmasikligi_dizi_int);
+        fscanf(dosya, "%s", &deneme);
+        if (strstr(deneme, "for") != NULL || strstr(deneme, "while") != NULL || strstr(deneme, "do") != NULL)
+        {
+            kalinanYer = dosya;
+            while (!feof(kalinanYer))
+            {
+                fscanf(kalinanYer, "%s", &deneme2);
+                if (strstr(deneme2, "{") != NULL)
+                {
+                    acilanParantez += 1;
+                }
+                else if (strstr(deneme2, "}") != NULL)
+                {
+                    kapananParantez += 1;
+                }
+                if (acilanParantez == 0 || acilanParantez != kapananParantez)
+                {
+                    if (strstr(deneme2, "return") != NULL || strstr(deneme2, "=") != NULL)
+                    {
+                        nSayisi++;
+                    }
+                }
+            }
+        }
     }
-
-    if(uzunluk_float>0)
+    fclose(dosya);
+    FILE *dosya2;
+    dosya2 = fopen(TEXT_DOSYA, "r");
+    while (!feof(dosya2))
     {
-        printf(" %s +",yerkarmasikligi_dizi_float);
+        fscanf(dosya2, "%s", &deneme3);
+        if (strstr(deneme3, "return") != NULL || strstr(deneme3, "=") != NULL)
+        {
+            eldeSayi++;
+        }
     }
-
-    if(uzunluk_char>0)
+    fclose(dosya2);
+    if(nSayisi>0)
     {
-        printf(" %s +",yerkarmasikligi_dizi_char);
-    }
-
-    if(uzunluk_double>0)
+    printf("Gecen Zaman: T(N) = %dN + %d\n", nSayisi, (eldeSayi - nSayisi));
+    }else if (nSayisi==0)
     {
-        printf(" %s +",yerkarmasikligi_dizi_double);
+    printf("Gecen Zaman: T(N) =%d\n",(eldeSayi - nSayisi));
     }
 
 }
 
-void zamanHesapla()
-{
-    clock_t baslangic = clock();
-
-    /* buraya kod yaziniz */
-
-    clock_t son = clock();
-    double harcananZaman = (double)(son - baslangic) / CLOCKS_PER_SEC;
-    printf("\n\n%f\n", harcananZaman);
-}
