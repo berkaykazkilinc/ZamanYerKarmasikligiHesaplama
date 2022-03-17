@@ -12,6 +12,10 @@ void ZamanKarmasikligi();
 int YerKarmasikligi(char deneme[],FILE *kalinan_yer);
 int YerKarmasikligiKontrol(int uzunluk,int byte,FILE *kalinan_yer,char dizi[]);
 void DosyaKontrol();
+<<<<<<< HEAD
+=======
+void Yazdir();
+>>>>>>> 82391f164527985ab8226bbe57d2be71d89fd82f
 void harcananZaman();
 
 char sonuc_string[255];
@@ -103,8 +107,48 @@ int YerKarmasikligi(char deneme[],FILE *kalinan_yer)
     uzunluk=strlen(deneme);
     if(strcmp(deneme,"int")==0 || strstr(deneme,"(int")!=NULL)  //int kontrol
     {
+<<<<<<< HEAD
        byte=4;
     }
+=======
+        char deneme2[255];
+        while(deneme[uzunluk]!='\n') //satýr sonuna kadar oku
+        {
+            fscanf(kalinan_yer,"%s",&deneme2);
+            if(strstr(deneme2,"main()"))
+            {
+                return 0;
+            }
+            else
+            {
+                int uzunluk_deneme2=0,sol=0,sag=0;
+                uzunluk_deneme2=strlen(deneme2);
+                if(strstr(deneme2,"[")!=NULL && strstr(deneme2,"]")!=NULL)
+                {
+
+                    for(i=0; i<uzunluk_deneme2; i++)
+                    {
+                        if(deneme2[i]=='[')
+                        {
+                            sol++;
+                        }
+                        else if(deneme2[i]==']')
+                        {
+                            sag++;
+                        }
+
+                    }
+                    if(sol==2 && sag==2)
+                    {
+                        strcpy(yerkarmasikligi_dizi_int,"4n^2");
+
+                    }
+                    else
+                    {
+                        strcpy(yerkarmasikligi_dizi_int,"4n");
+
+                    }
+>>>>>>> 82391f164527985ab8226bbe57d2be71d89fd82f
 
     else if(strcmp(deneme,"float")==0 || strstr(deneme,"(float")!=NULL)  //float kontrol
     {
@@ -113,7 +157,45 @@ int YerKarmasikligi(char deneme[],FILE *kalinan_yer)
     }
     else if(strcmp(deneme,"char")==0 || strstr(deneme,"(char")!=NULL)  //char kontrol
     {
+<<<<<<< HEAD
         byte=1;
+=======
+        char deneme2[255];
+        while(deneme[uzunluk]!='\n') //satýr sonuna kadar oku
+        {
+            fscanf(kalinan_yer,"%s",&deneme2);
+            if(strstr(deneme2,"main()"))
+            {
+                return 0;
+            }
+            else
+            {
+                int uzunluk_deneme2=0,sol=0,sag=0;
+                uzunluk_deneme2=strlen(deneme2);
+                if(strstr(deneme2,"[")!=NULL && strstr(deneme2,"]")!=NULL)
+                {
+
+                    for(i=0; i<uzunluk_deneme2; i++)
+                    {
+                        if(deneme2[i]=='[')
+                        {
+                            sol++;
+                        }
+                        else if(deneme2[i]==']')
+                        {
+                            sag++;
+                        }
+
+                    }
+                    if(sol==2 && sag==2)
+                    {
+                        strcpy(yerkarmasikligi_dizi_float,"4n^2");
+
+                    }
+                    else
+                    {
+                        strcpy(yerkarmasikligi_dizi_float,"4n");
+>>>>>>> 82391f164527985ab8226bbe57d2be71d89fd82f
 
     }
 
@@ -124,7 +206,47 @@ int YerKarmasikligi(char deneme[],FILE *kalinan_yer)
     }
     else if(strcmp(deneme,"boolen")==0 || strstr(deneme,"(boolen")!=NULL)  //double kontrol
     {
+<<<<<<< HEAD
         byte=1;
+=======
+        char deneme2[255];
+        while(deneme[uzunluk]!='\n') //satýr sonuna kadar oku
+        {
+            fscanf(kalinan_yer,"%s",&deneme2);
+            if(strstr(deneme2,"main()"))
+            {
+                return 0;
+            }
+            else
+            {
+                int uzunluk_deneme2=0,sol=0,sag=0;
+                uzunluk_deneme2=strlen(deneme2);
+                if(strstr(deneme2,"[")!=NULL && strstr(deneme2,"]")!=NULL)
+                {
+
+                    for(i=0; i<uzunluk_deneme2; i++)
+                    {
+                        if(deneme2[i]=='[')
+                        {
+                            sol++;
+                        }
+                        else if(deneme2[i]==']')
+                        {
+                            sag++;
+                        }
+
+                    }
+                    if(sol==2 && sag==2)
+                    {
+                        strcpy(yerkarmasikligi_dizi_char,"n^2");
+
+                    }
+                    else
+                    {
+                        strcpy(yerkarmasikligi_dizi_char,"n");
+
+                    }
+>>>>>>> 82391f164527985ab8226bbe57d2be71d89fd82f
 
     }
     else if(strcmp(deneme,"short")==0 || strstr(deneme,"(short")!=NULL)  //double kontrol
@@ -134,6 +256,7 @@ int YerKarmasikligi(char deneme[],FILE *kalinan_yer)
     }
     else if(strcmp(deneme,"long")==0 || strstr(deneme,"(long")!=NULL)  //double kontrol
     {
+<<<<<<< HEAD
         byte=4;
     }
     else
@@ -150,6 +273,10 @@ int YerKarmasikligiKontrol(int uzunluk,int byte,FILE *kalinan_yer,char dizi[])
         char dizi2[255];
         int i=0,virgul_sayisi=0,yer_karmasikligi=0;
         while(dizi[uzunluk]!='\n') //sat�r sonuna kadar oku
+=======
+        char deneme2[255];
+        while(deneme[uzunluk]!='\n') //satýr sonuna kadar oku
+>>>>>>> 82391f164527985ab8226bbe57d2be71d89fd82f
         {
             fscanf(kalinan_yer,"%s",&dizi2);
             if(strstr(dizi2,"main()"))
@@ -292,3 +419,56 @@ void harcananZaman()
 
 }
 
+<<<<<<< HEAD
+=======
+void harcananZaman()
+{
+    int nSayisi = 0, sabitSayi = 0, eldeSayi = 0;
+    int acilanParantez = 0, kapananParantez = 0;
+    char deneme[50];
+    char deneme2[50];
+    char deneme3[50];
+    FILE *dosya, *kalinanYer;
+    dosya = fopen(TEXT_DOSYA, "r");
+    while (!feof(dosya))
+    {
+        fscanf(dosya, "%s", &deneme);
+        if (strstr(deneme, "for") != NULL || strstr(deneme, "while") != NULL || strstr(deneme, "do") != NULL)
+        {
+            kalinanYer = dosya;
+            while (!feof(kalinanYer))
+            {
+                fscanf(kalinanYer, "%s", &deneme2);
+                if (strstr(deneme2, "{") != NULL)
+                {
+                    acilanParantez += 1;
+                }
+                else if (strstr(deneme2, "}") != NULL)
+                {
+                    kapananParantez += 1;
+                }
+                if (acilanParantez == 0 || acilanParantez != kapananParantez)
+                {
+                    if (strstr(deneme2, "return") != NULL || strstr(deneme2, "=") != NULL)
+                    {
+                        nSayisi++;
+                    }
+                }
+            }
+        }
+    }
+    fclose(dosya);
+    FILE *dosya2;
+    dosya2 = fopen(TEXT_DOSYA, "r");
+    while (!feof(dosya2))
+    {
+        fscanf(dosya2, "%s", &deneme3);
+        if (strstr(deneme3, "return") != NULL || strstr(deneme3, "=") != NULL)
+        {
+            eldeSayi++;
+        }
+    }
+    fclose(dosya2);
+    printf("Gecen Zaman: T(N) = %dN + %d\n", nSayisi, (eldeSayi - nSayisi));
+}
+>>>>>>> 82391f164527985ab8226bbe57d2be71d89fd82f
