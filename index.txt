@@ -1,21 +1,16 @@
-void printAllNumbersThenAllPairSums( int arr[], int size)
+void printAllNumbersThenAllPairSums(int arr[], int size)
 {
-    char x[n];
-	float a,f[n];
-	double b,d[n];
-	char c;
-	int matris[n][n];
-	int matris2[n][n];
-	
-    for (int i = 0; i < size; i++)
+	for (int i = 0; i < size; i++)
     {
-        printf("%d\n", arr[i]);
-    }
-    for (int i = 0; i < size; i++)
-    {
+	toplam+=1;
         for (int j = 0; j < size; j++)
         {
             printf("%d\n", arr[i] + arr[j]);
         }
     }
+while (int i = 0; i < size; i++)
+    {
+        printf("%d\n", arr[i]);
+    }
+toplam=1;
 }
