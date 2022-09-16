@@ -1,1 +1,1 @@
-"# prolab2_proje1" 
+Bu projenin amacı, C dilinde kullanılan kodların zaman ve yer karmaşıklığının hesaplaması amaçlanmaktadır.
